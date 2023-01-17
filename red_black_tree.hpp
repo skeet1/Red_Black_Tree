@@ -6,7 +6,7 @@
 /*   By: mkarim <mkarim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/09 12:43:06 by mkarim            #+#    #+#             */
-/*   Updated: 2023/01/17 10:39:04 by mkarim           ###   ########.fr       */
+/*   Updated: 2023/01/17 17:08:22 by mkarim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,11 @@ class RBT {
             size_t  _black_height;
             size_t  _height;
             char    _color;
+            bool    dbl_black;
 
             Node(Key key, T value)
             {
+                
                 _key = key;
                 _value = value;
                 _parent = NULL;
@@ -38,6 +40,7 @@ class RBT {
                 _uncle = NULL;
                 _color = 'R';
                 _black_height = 1;
+                dbl_black = false;
             }
         };
     private:
@@ -103,6 +106,35 @@ class RBT {
             return root;
         }
 
+        void    swap_node(Node*& n1, Node*& n2)
+        {
+            Node* tmp;
+
+            tmp->_key = n1->_key;
+            tmp->_value = n1->_value;
+            tmp->_black_height = n1->_black_height;
+            tmp->_color = n1->_color;
+            tmp->_right = n1->_right;
+            tmp->_left = n1->_left;
+            tmp->_parent = n1->_parent;
+
+            n1->_key = n2->_key;
+            n1->_value = n2->_value;
+            n1->_black_height = n2->_black_height;
+            n1->_color = n2->_color;
+            n1->_right = n2->_right;
+            n1->_left = n2->_left;
+            n1->_parent = n2->_parent;
+
+            n2->_key = tmp->_key;
+            n2->_value = tmp->_value;
+            n2->_black_height = tmp->_black_height;
+            n2->_color = tmp->_color;
+            n2->_right = tmp->_right;
+            n2->_left = tmp->_left;
+            n2->_parent = tmp->_parent;
+        }
+
         Node*   insert_node(Node* root, Node* newNode)
         {
             if (root == NULL)
@@ -117,10 +149,6 @@ class RBT {
                 root->_right = insert_node(root->_right, newNode);
                 root->_right->_parent = root;
             }
-            if (root->_left)
-                root->_black_height = root->_left->_black_height + (root->_left->_color == 'B');
-            else if (root->_right)
-                root->_black_height = root->_right->_black_height + (root->_right->_color == 'B');
             return root;
         }
 
@@ -248,15 +276,63 @@ class RBT {
             root->_color = 'B';
         }
 
-        // void    remove(Key key)
-        // {
-        //     remove_node(search(root, key));
-        // }
+        Node*   find_successor(Node* node)
+        {
+            while (node->_left)
+            {
+                node = node->_left;
+            }
+            return node;
+        }
 
-        // void    remove_node(Node* node)
-        // {
-            
-        // }
+        void    remove(Key key)
+        {
+            Node* s = search(key);
+            remove_node(s);
+        }
+
+        void    remove_node(Node*& node)
+        {
+            if (!node)
+                return ;
+            if (node->_left == NULL && node->_right == NULL)
+            {
+                delete node;
+                node = nullptr;
+            }
+            else if (node->_right == NULL)
+            {
+                swap_node(node, node->_left);
+                delete node->_left;
+                node->_left = nullptr;
+            }
+            else if (node->_left == NULL)
+            {
+                swap_node(node, node->_right);
+                if (node->_right->_color == 'B' && node->_color == 'B')
+                    node->dbl_black = true;
+                delete node->_right;
+                node->_right = nullptr;
+            }
+            else
+            {
+                Node* successor = find_successor(node->_right);
+                swap_node(node, successor);
+                if (successor->_color == 'B' && node->_color == 'B')
+                    node->dbl_black = true;
+                delete successor;
+                successor = nullptr;
+                // std::cout << "we are here" << std::endl;
+            }
+        }
+
+        void    test()
+        {
+            Node* s = search(root, 8);
+            Node* succ = find_successor(s->_right);
+
+            std::cout << succ->_key << std::endl;
+        }
 
         void    printTree()
         {
@@ -279,7 +355,6 @@ class RBT {
                 std::cout << " P is : " << root->_parent->_key;
             else
                 std::cout << " i am the root";
-            std::cout << " H: " << root->_black_height << std::endl;
             std::cout << std::endl << std::endl;
             printTree(root->_left, depth+1);
             std::cout << "\033[0m";

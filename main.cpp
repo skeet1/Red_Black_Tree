@@ -6,7 +6,7 @@
 /*   By: mkarim <mkarim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 08:15:00 by mkarim            #+#    #+#             */
-/*   Updated: 2023/01/15 14:56:24 by mkarim           ###   ########.fr       */
+/*   Updated: 2023/01/17 16:24:27 by mkarim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,13 @@ int main()
 {
     RBT<int, int> tree;
 
-    for (int i = 1 ; i <= 15; i++)
+    for (int i = 1 ; i <= 8; i++)
     {
         tree.insert(i, 1);
     }
     
-    tree.insert(30, 2);
-    tree.insert(25, 2);
+    // tree.insert(30, 2);
+    // tree.insert(25, 2);
     // tree.insert(50, 7);
     // tree.insert(60, 7);
     // tree.insert(80, 7);
@@ -37,10 +37,11 @@ int main()
     // tree.insert(36, 7);
     // tree.insert(35, 7);
     // tree.insert(34, 7);
-
     tree.printTree();
-    if (tree.check())
-        std::cout << "all is good" << std::endl;
+    // tree.remove(4);
+    // tree.test();
+    // if (tree.check())
+        // std::cout << "all is good" << std::endl;
 
     // RBTree tree;
 
