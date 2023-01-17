@@ -28,4 +28,4 @@ So let's start with first four cases.
 
 the common thing in all these cases is the uncle's color is red, and simple when found uncle's color is red we change the color of parent and uncle to black and grandparent's color to red, it's a very simple isn't.
 
-![recoloring steps](https://github.com/skeet1/Red_Black_Tree/blob/main/img/recoloring_in_first_four_cases.png?raw=true)
+![recoloring steps](https://github.com/skeet1/Red_Black_Tree/blob/main/img/recoloring_in_first_four_cases.svg?raw=true)
