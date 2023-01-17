@@ -20,3 +20,4 @@ First of all we have take a look to these pictuers to understand what i mean whe
 
 ![alpha meaning](https://github.com/skeet1/Red_Black_Tree/blob/main/img/alpha_meaning.png?raw=true)
 
+![L R meaning](https://github.com/skeet1/Red_Black_Tree/blob/main/img/LR_meaning.png?raw=true)
