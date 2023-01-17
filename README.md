@@ -29,3 +29,8 @@ So let's start with first four cases.
 the common thing in all these cases is the uncle's color is red, and simple when found uncle's color is red we change the color of parent and uncle to black and grandparent's color to red, it's a very simple isn't.
 
 ![recoloring steps](https://github.com/skeet1/Red_Black_Tree/blob/main/img/recoloring_in_first_four_cases.svg?raw=true)
+
+When the uncle's color is black then the process will be a little bit complicated, and four each case there's a diffrenct process.
+
+GeeksForGeeks explain that better than me https://www.geeksforgeeks.org/insertion-in-red-black-tree/
+
