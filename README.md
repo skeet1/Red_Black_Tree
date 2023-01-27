@@ -13,20 +13,20 @@ Properties of red black tree:
 
 so after any operation in our tree insertion/deletion we have to check if these properties it's a still respected, if it's not we have to handle the violation, and for that we have two things (recoloring and rotation).
 
-###Recoloring 
+### Recoloring 
 Recoloring i think it's clear, it's just flip color of the node, (RED to BLACK)/(BLACK to RED).
 
-###Rotation
+### Rotation
 
 in rotation, we have to types, right rotation and left rotation, this pictures will explain what happens in rotation.
 
--Right Rotation
+- Right Rotation
 
 ![right_rotation](https://github.com/skeet1/Red_Black_Tree/blob/main/img/right_rotate.png?raw=true)
 
 ![right_rotation](https://github.com/skeet1/Red_Black_Tree/blob/main/img/right_r.gif?raw=true)
 
--Left Rotation
+- Left Rotation
 
 ![left_rotation](https://github.com/skeet1/Red_Black_Tree/blob/main/img/left_rotati.png?raw=true)
 
