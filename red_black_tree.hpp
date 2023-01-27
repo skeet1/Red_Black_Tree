@@ -6,7 +6,7 @@
 /*   By: mkarim <mkarim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/09 12:43:06 by mkarim            #+#    #+#             */
-/*   Updated: 2023/01/26 18:11:31 by mkarim           ###   ########.fr       */
+/*   Updated: 2023/01/27 12:58:02 by mkarim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -343,17 +343,20 @@ class RBT {
             {
                 move_data(node, node->_left);
                 check_cases(node->_left);
+                remove_node(node->_left);
             }
             else if (!node->_left)
             {
                 move_data(node, node->_right);
                 check_cases(node->_right);
+                remove_node(node->_right);
             }
             else
             {
                 Node* succ = find_successor(node->_right);
                 move_data(node, succ);
                 check_cases(succ);
+                remove_node(succ);
             }
         }
 
@@ -362,21 +365,18 @@ class RBT {
         // case one ==> it's the simple case the color of node is red so there's no violation
         void    case_one(Node*& node)
         {
-            std::cout << "i'm in case one" << std::endl;
             // nothing to do here
         }
 
         // case two ==> when we are in root nothing to do
         void    case_two(Node*& node)
         {
-            std::cout << "i'm in case two" << std::endl;
             return ;
         }
 
         // case three ==> sibling black and their childs also black
         void    case_three(Node*& node)
         {
-            std::cout << "i'm in case three" << std::endl;
             Node*  parent = node->_parent;
             Node*  sibling = get_sibling(node);
 
@@ -392,7 +392,6 @@ class RBT {
         // case four ==> when sibling color is red
         void    case_four(Node*& node)
         {
-            std::cout << "i'm in case four" << std::endl;
             Node*& parent = node->_parent;
             if (parent && node == parent->_left)
             {
@@ -413,7 +412,6 @@ class RBT {
         // case five ==> sibling is black and far nephew is black and near nephew is red
         void    case_five(Node*& node)
         {
-            std::cout << "i'm in case five" << std::endl;
             Node*   parent = node->_parent;
             Node*   sibling = get_sibling(node);
             Node*   near_nephew = get_near_nephew(node);
@@ -429,7 +427,6 @@ class RBT {
         // case six ==> sibling is black and far nephew is red
         void    case_six(Node*& node)
         {
-            std::cout << "i'm in case six" << std::endl;
             Node*   parent = node->_parent;
             Node*   sibling = get_sibling(node);
             Node*   far_nephew = get_far_nephew(node);
@@ -500,22 +497,32 @@ class RBT {
 
         void    check_cases(Node*& node)
         {
+            // std::cout << node->_key << ", color is : " << node->_color << std::endl;
             if (node->_color == 'R')
+            {
                 case_one(node);
+            }
             else if (node == root)
             {
                 case_two(node);
                 return ;
             }
             else if (get_sibling_color(node) == 'B' && black_child(get_sibling(node)))
+            {
                 case_three(node);
+            }
             else if (get_sibling_color(node) == 'R')
+            {
                 case_four(node);
+            }
             else if (get_sibling_color(node) == 'B' && far_nephew_is_black(node) && near_newphew_is_red(node))
+            {
                 case_five(node);
+            }
             else if (get_sibling_color(node) == 'B' && !far_nephew_is_black(node))
+            {
                 case_six(node);
-            remove_node(node);
+            }
         }
 
         void    remove(Node*& node, Key key)
@@ -536,10 +543,15 @@ class RBT {
                         node = nullptr;
                     }
                     else
+                    {
                         check_cases(node);
+                        remove_node(node);
+                    }
                 }
                 else
+                {
                     remove_assist(node);
+                }
             }
         }
 
@@ -549,17 +561,20 @@ class RBT {
             {
                 move_data(node, node->_right);
                 check_cases(node->_right);
+                remove_node(node->_right);
             }
             else if (node->_right == NULL)
             {
                 move_data(node, node->_left);
                 check_cases(node->_left);
+                remove_node(node->_left);
             }
             else
             {
                 Node* succ = find_successor(node->_right);
                 move_data(node, succ);
                 check_cases(succ);
+                remove_node(succ);
             }
         }
 
