@@ -11,7 +11,28 @@ Properties of red black tree:
 5) Every way from parent to child should contain equal number of black nodes
 6) The new inserting node it's color must be red
 
-so after any operation in our tree inserting/deleting we have to check if these properties it's a still respected, if it's not we have to handle this violation, and for that we have two things (recoloring and rotation), let's understand more about how violation can happend and how we can handle it.
+so after any operation in our tree insertion/deletion we have to check if these properties it's a still respected, if it's not we have to handle the violation, and for that we have two things (recoloring and rotation).
+
+###Recoloring 
+Recoloring i think it's clear, it's just flip color of the node, (RED to BLACK)/(BLACK to RED).
+
+###Rotation
+
+in rotation, we have to types, right rotation and left rotation, this pictures will explain what happens in rotation.
+
+-Right Rotation
+
+![right_rotation](https://github.com/skeet1/Red_Black_Tree/blob/main/img/right_rotate.png?raw=true)
+
+![right_rotation](https://github.com/skeet1/Red_Black_Tree/blob/main/img/right_r.gif?raw=true)
+
+-Left Rotation
+
+![left_rotation](https://github.com/skeet1/Red_Black_Tree/blob/main/img/left_rotati.png?raw=true)
+
+![left_rotation](https://github.com/skeet1/Red_Black_Tree/blob/main/img/left_r.gif?raw=true)
+
+Now let's understand more about how violation can happend and how we can handle it.
 
 As you see in the rule number 6 our new node's color is red, what's happen if our new node it will be child of another red node, here we break the rule number 4, so how we can handle that.
 Actually we have 8 cases, don't woryy we will decrease the number of cases just keep calm and stay focus with me.
