@@ -32,7 +32,9 @@ in rotation, we have to types, right rotation and left rotation, this pictures w
 
 ![left_rotation](https://github.com/skeet1/Red_Black_Tree/blob/main/img/left_r.gif?raw=true)
 
-Now let's understand more about how violation can happend and how we can handle it.
+## INSERTION
+
+Now let's understand more about how violation in inserting can happend and how we can handle it.
 
 As you see in the rule number 6 our new node's color is red, what's happen if our new node it will be child of another red node, here we break the rule number 4, so how we can handle that.
 Actually we have 8 cases, don't woryy we will decrease the number of cases just keep calm and stay focus with me.
@@ -51,7 +53,17 @@ the common thing in all these cases is the uncle's color is red, and simple when
 
 ![recoloring steps](https://github.com/skeet1/Red_Black_Tree/blob/main/img/recoloring_in_first_four_cases.svg?raw=true)
 
-When the uncle's color is black then the process will be a little bit complicated, and four each case there's a diffrenct process.
+When the uncle's color is black then the process will be a little bit complicated, and for each case there's a diffrenct process.
 
 GeeksForGeeks explain that better than me https://www.geeksforgeeks.org/insertion-in-red-black-tree/
+to understand more the insertion part watch this video : https://youtu.be/JDmWPWFKliE
+
+## DELETION
+
+deletion in red black tree it's more complicated than insertion.
+
+first of all let's think logiclly, which rule will be break if we execute the binary search tree deletion process, if we delete a black node, here the rule number 5 is broken, and then you will see something called double-black.
+
+Check this article in GeeksForGeeks https://www.geeksforgeeks.org/deletion-in-red-black-tree/
+after that, watch this video : https://youtu.be/JDmWPWFKliE
 
