@@ -56,6 +56,7 @@ the common thing in all these cases is the uncle's color is red, and simple when
 When the uncle's color is black then the process will be a little bit complicated, and for each case there's a diffrenct process.
 
 GeeksForGeeks explain that better than me https://www.geeksforgeeks.org/insertion-in-red-black-tree/
+
 to understand more the insertion part watch this video : https://youtu.be/JDmWPWFKliE
 
 ## DELETION
@@ -65,5 +66,6 @@ deletion in red black tree it's more complicated than insertion.
 first of all let's think logiclly, which rule will be break if we execute the binary search tree deletion process, if we delete a black node, here the rule number 5 is broken, and then you will see something called double-black.
 
 Check this article in GeeksForGeeks https://www.geeksforgeeks.org/deletion-in-red-black-tree/
+
 after that, watch this video : https://youtu.be/JDmWPWFKliE
 
