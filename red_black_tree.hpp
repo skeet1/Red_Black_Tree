@@ -6,7 +6,7 @@
 /*   By: mkarim <mkarim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/09 12:43:06 by mkarim            #+#    #+#             */
-/*   Updated: 2023/01/27 12:58:02 by mkarim           ###   ########.fr       */
+/*   Updated: 2023/01/29 15:19:54 by mkarim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,14 @@
 #define RED_BLACK_TREE_HPP
 
 #include <iostream>
+#include <map>
+#include <vector>
+#include "pair.hpp"
 
-template<class Key, class T>
+template<class Key, class T, class Compare = std::less<Key>, class Allocator = std::allocator<std::pair<const Key, T> > >
 class RBT {
         struct Node {
-            Key     _key;
-            T       _value;
+            ft::pair<Key, T> p;
             Node*   _parent;
             Node*   _left;
             Node*   _right;
@@ -27,79 +29,51 @@ class RBT {
             size_t  _black_height;
             size_t  _height;
             char    _color;
-            bool    dbl_black;
 
             Node(Key key, T value)
             {
-                _key = key;
-                _value = value;
+                p = ft::make_pair(key, value);
                 _parent = NULL;
                 _left = NULL;
                 _right = NULL;
                 _uncle = NULL;
                 _color = 'R';
                 _black_height = 1;
-                dbl_black = false;
             }
 
             Node()
             {
-                _key = 0;
-                _value = 0;
             }
         };
+    public:
+            typedef Allocator                                                   allocator_type;
+            typedef typename allocator_type::template rebind<Node>::other       allocator_node;
     private:
-        Node*   root;
+        Node*                   root;
+        allocator_type          alloc;
+        allocator_node          alloc_node;
     
     protected:
-        
-    public:
-    
-        RBT()
-        {
-            root = NULL;
-        }
-
-        void    insert(Key key, T value)
-        {
-            insert_node(key, value);
-        }
         
         void    insert_node(Key key, T value)
         {
             if (search(root, key))
                 return ;
-            Node*   newNode = new Node(key, value);
+            Node*   newNode = alloc_node.allocate(1);
+            alloc_node.construct(newNode, Node(key, value));
             root = insert_node(root, newNode);
             check_violation(newNode);
         }
 
-        Node*   search(int val)
-        {
-            return search(root, val);
-        }
-
         Node*   search(Node* root, Key key)
         {
-            // recursive way 
-            
-            // if (root == NULL)
-            //     return NULL;
-            // if (root->_key == key)
-            //     return root;
-            // else if (root->_key > key)
-            //     return search(root->_left, key);
-            // else
-            //     return search(root->_right, key);
-
-            // iterative way
             while (root)
             {
-                if (root->_key > key)
+                if (Compare()(key, root->p.first))
                 {
                     root = root->_left;
                 }
-                else if (root->_key < key)
+                else if (Compare()(root->p.first, key))
                 {
                     root = root->_right;
                 }
@@ -114,31 +88,31 @@ class RBT {
             Key tmp_key;
             T   tmp_value;
 
-            tmp_key = n1->_key;
-            tmp_value = n1->_value;
+            tmp_key = n1->p.first;
+            tmp_value = n1->p.second;
 
-            n1->_key = n2->_key;
-            n1->_value = n2->_value;
+            n1->p.first = n2->p.first;
+            n1->p.second = n2->p.second;
 
-            n2->_key = tmp_key;
-            n2->_value = tmp_value;
+            n2->p.first = tmp_key;
+            n2->p.second = tmp_value;
         }
 
-        Node*   insert_node(Node* root, Node* newNode)
+        Node*   insert_node(Node* node, Node* newNode)
         {
-            if (root == NULL)
+            if (node == NULL)
                 return newNode;
-            if (root->_key > newNode->_key)
+            if (Compare()(newNode->p.first, node->p.first))
             {
-                root->_left = insert_node(root->_left, newNode);
-                root->_left->_parent = root;
+                node->_left = insert_node(node->_left, newNode);
+                node->_left->_parent = node;
             }
-            else if (root->_key < newNode->_key)
+            else if (Compare()(node->p.first, newNode->p.first))
             {
-                root->_right = insert_node(root->_right, newNode);
-                root->_right->_parent = root;
+                node->_right = insert_node(node->_right, newNode);
+                node->_right->_parent = node;
             }
-            return root;
+            return node;
         }
 
         void    right_rotation(Node*& root, Node* node)
@@ -289,10 +263,10 @@ class RBT {
                 
             }
         }
-
-        void    remove(Key key)
+        
+        Node*   search(Key val)
         {
-            remove(root, key);
+            return search(root, val);
         }
 
         char    get_sibling_color(Node* node)
@@ -331,13 +305,15 @@ class RBT {
             if (!node->_left && !node->_right)
             {
                 Node* parent = node->_parent;
-
-                if (node == parent->_left)
+                Node* save_node = node;
+                
+                if (save_node == parent->_left)
                     parent->_left = NULL;
-                else
+                else if (save_node == parent->_right)
                     parent->_right = NULL;
-                delete node;
-                node = nullptr;
+                alloc_node.destroy(save_node);
+                alloc_node.deallocate(save_node, 1);
+                save_node = nullptr;
             }
             else if (!node->_right)
             {
@@ -365,12 +341,14 @@ class RBT {
         // case one ==> it's the simple case the color of node is red so there's no violation
         void    case_one(Node*& node)
         {
+            (void)node;
             // nothing to do here
         }
 
         // case two ==> when we are in root nothing to do
         void    case_two(Node*& node)
         {
+            (void)node;
             return ;
         }
 
@@ -497,7 +475,7 @@ class RBT {
 
         void    check_cases(Node*& node)
         {
-            // std::cout << node->_key << ", color is : " << node->_color << std::endl;
+            // std::cout << node->p.first << ", color is : " << node->_color << std::endl;
             if (node->_color == 'R')
             {
                 case_one(node);
@@ -529,9 +507,9 @@ class RBT {
         {
             if (!node)
                 return ;
-            if (node->_key > key)
+            if (Compare()(key, node->p.first))
                 remove(node->_left, key);
-            else if (node->_key < key)
+            else if (Compare()(node->p.first, key))
                 remove(node->_right, key);
             else
             {
@@ -539,7 +517,8 @@ class RBT {
                 {
                     if (node == root)
                     {
-                        delete node;
+                        alloc_node.destroy(node);
+                        alloc_node.deallocate(node, 1);
                         node = nullptr;
                     }
                     else
@@ -580,8 +559,8 @@ class RBT {
 
         void    move_data(Node*&n1, Node* n2)
         {
-            n1->_key = n2->_key;
-            n1->_value = n2->_value;
+            n1->p.first = n2->p.first;
+            n1->p.second = n2->p.second;
         }
 
         bool    black_child(Node* node)
@@ -591,11 +570,6 @@ class RBT {
             if (node->_right && node->_right->_color == 'R')
                 return false;
             return true;
-        }
-
-        void    printTree()
-        {
-            printTree(root, 0);
         }
 
         void    printTree(Node* root, int depth)
@@ -609,9 +583,9 @@ class RBT {
                 std::cout << "\033[31m";
             else
                 std::cout << "\033[30m";
-            std::cout << "(" << root->_key << ":" << root->_value << ")";
+            std::cout << "(" << root->p.first << ":" << root->p.second << ")";
             if (root->_parent)
-                std::cout << " P is : " << root->_parent->_key;
+                std::cout << " P is : " << root->_parent->p.first;
             else
                 std::cout << " i am the root";
             std::cout << std::endl << std::endl;
@@ -619,22 +593,50 @@ class RBT {
             std::cout << "\033[0m";
         }
 
-        bool    check()
+        void    clear(Node*& node)
         {
-            return check(root);
+            if (node == NULL)
+                return ;
+            clear(node->_left);
+            clear(node->_right);
+            alloc_node.destroy(node);
+            alloc_node.deallocate(node, 1);
+            node = nullptr;
+        }
+        
+    public:
+    
+        RBT()
+        {
+            root = NULL;
         }
 
-        bool    check(Node* root)
+        void    insert(Key key, T value)
         {
-            if (!root)
+            insert_node(key, value);
+        }
+
+        void    remove(Key key)
+        {
+            remove(root, key);
+        }
+
+        bool    find(Key key)
+        {
+            if (search(key))
                 return true;
-            if (root->_right && root->_left)
-                return ((root->_right->_black_height + root->_right->_color == 'B') == (root->_left->_black_height + root->_left->_color == 'B'));
-            return (check(root->_right) && check(root->_left));
+            return false;
         }
 
-        private:
-            RBT*    _tree;
+        void    clear()
+        {
+            clear(root);
+        }
+
+        void    printTree()
+        {
+            printTree(root, 0);
+        }
 };
 
 #endif 
