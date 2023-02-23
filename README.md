@@ -67,5 +67,5 @@ first of all let's think logiclly, which rule will be break if we execute the bi
 
 Check this article in GeeksForGeeks https://www.geeksforgeeks.org/deletion-in-red-black-tree/
 
-after that, watch this video : https://youtu.be/JDmWPWFKliE
+after that, watch this video : https://youtu.be/4KDovab_OS8
 
